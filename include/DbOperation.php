@@ -29,6 +29,15 @@ class DbOperation{
                 return 0; //return 0 means success
                 return 1;
     }
+    public function inserPembayaran($id,  $tgl_pemesanan, $namafile){
+            // $stmt = $this->con->prepare("INSERT INTO gambar(gambar) VALUES (?);");
+            
+            $stmt = $this->con->prepare("UPDATE  pesanan SET gambar=?, tgl_bayar=? WHERE uuid=?");
+            $stmt->bind_param("sss",$namafile , $tgl_pemesanan,  $id,);
+            if($stmt->execute())
+                return 0; //return 0 means success
+                return 1;
+    }
      
     //fungsi untuk mengambil data di tabel tb_upload
     public function tampilGambar(){

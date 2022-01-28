@@ -7,101 +7,123 @@ use \Slim\App;
 $app = new App();
 
 $dbhost = '127.0.0.1';
+// $dbhost = 'localhost';
+// $dbuser = 'pramudi1_lirta';
+// $dbpass = 'IiZmu;6n24u2';
+// $dbname = 'pramudi1_pakan_ikan';
+// $dbmethod = 'mysql:dbname=';
+
+
 $dbuser = 'root';
 $dbpass = '';
 $dbname = 'ikan';
 $dbmethod = 'mysql:dbname=';
 
-// $dbhost = '127.0.0.1';
-// $dbuser = 'qtsjtszxkx';
-// $dbpass = 'nUUG5Ey3nP';
-// $dbname = 'qtsjtszxkx';
-// $dbmethod = 'mysql:dbname=';
-
 $dsn = $dbmethod.$dbname;
 $pdo = new PDO($dsn, $dbuser, $dbpass);
 $db  = new NotORM($pdo);
 
+// $app-> get('/', function(){
+//     echo "API Mahasiswa";
+// });
+
+// $app ->get('/member', function() use($app, $db){
+// 	$dosen["error"] = false;
+// 	$dosen["message"] = "Berhasil mendapatkan data dosen";
+//     foreach($db->tbl_user() as $data){
+//         $dosen['member'][] = array(
+//             'id' => $data['id'],
+//             'name' => $data['name'],
+//             'username' => $data['username'],
+//             'gambar' => $data['gambar']
+//             );
+//     }
+//     echo json_encode($dosen);
+// });
 $app-> get('/', function(){
-    echo "API Mahasiswa";
+    echo "Sumber Rezeki";
 });
 
-$app ->get('/member', function() use($app, $db){
+$app ->get('/pesanan/{id_konsumen}', function($request, $response, $args) use($app, $db){
+	$responseJson["error"] = false;
+	$responseJson["message"] = "Berhasil mendapatkan data pesanan";
+    foreach($db->pesanan()->where('id_konsumen',$args['id_konsumen']) as $data){
+        $responseJson['pesanan'][] = array(
+            'id' => $data['uuid'],
+            'nama_penerima' => $data['nama_penerima'],
+            'alamat_penerima' => $data['alamat_penerima'],
+            'hp_penerima' => $data['hp_penerima'],
+            'kg' => $data['kg'],
+            'total' => $data['total'],
+            'tgl_pemesanan' => $data['tgl_pemesanan'],
+            'status' => $data['status'],
+            'gambar' => $data['gambar'],
+            'tgl_bayar' => $data['tgl_bayar']
+            );
+    }
+    echo json_encode($responseJson);
+});
+
+$app ->get('/pesananAdmin', function() use($app, $db){
 	$dosen["error"] = false;
 	$dosen["message"] = "Berhasil mendapatkan data dosen";
-    foreach($db->tbl_user() as $data){
-        $dosen['member'][] = array(
-            'id' => $data['id'],
-            'name' => $data['name'],
-            'username' => $data['username'],
-            'gambar' => $data['gambar']
+    foreach($db->pesanan()->where('status','order') as $data){
+        $dosen['pesanan'][] = array(
+            'id' => $data['uuid'],
+            'nama_penerima' => $data['nama_penerima'],
+            'alamat_penerima' => $data['alamat_penerima'],
+            'hp_penerima' => $data['hp_penerima'],
+            'kg' => $data['kg'],
+            'total' => $data['total'],
+            'tgl_pemesanan' => $data['tgl_pemesanan'],
+            'status' => $data['status'],
+            'gambar' => $data['gambar'],
+            'tgl_bayar' => $data['tgl_bayar']
+            );
+    }
+    echo json_encode($dosen);
+});
+$app ->get('/pesananDikemas', function() use($app, $db){
+	$dosen["error"] = false;
+	$dosen["message"] = "Berhasil mendapatkan data pesanan Dikemas";
+    foreach($db->pesanan()->where('status','Dikemas') as $data){
+        $dosen['pesanan'][] = array(
+            'id' => $data['uuid'],
+            'nama_penerima' => $data['nama_penerima'],
+            'alamat_penerima' => $data['alamat_penerima'],
+            'hp_penerima' => $data['hp_penerima'],
+            'kg' => $data['kg'],
+            'total' => $data['total'],
+            'tgl_pemesanan' => $data['tgl_pemesanan'],
+            'status' => $data['status'],
+            'gambar' => $data['gambar'],
+            'tgl_bayar' => $data['tgl_bayar']
+            );
+    }
+    echo json_encode($dosen);
+});
+$app ->get('/pesananDikirim', function() use($app, $db){
+	$dosen["error"] = false;
+	$dosen["message"] = "Berhasil mendapatkan data pesanan Dikirim";
+    foreach($db->pesanan()->where('status','Dikirim') as $data){
+        $dosen['pesanan'][] = array(
+            'id' => $data['uuid'],
+            'nama_penerima' => $data['nama_penerima'],
+            'alamat_penerima' => $data['alamat_penerima'],
+            'hp_penerima' => $data['hp_penerima'],
+            'kg' => $data['kg'],
+            'total' => $data['total'],
+            'tgl_pemesanan' => $data['tgl_pemesanan'],
+            'status' => $data['status'],
+            'gambar' => $data['gambar'],
+            'tgl_bayar' => $data['tgl_bayar']
             );
     }
     echo json_encode($dosen);
 });
 
-$app ->get('/dosen/{nama}', function($request, $response, $args) use($app, $db){
-    $dosen = $db->tbl_dosen()->where('nama',$args['nama']);
-    $dosendetail = $dosen->fetch();
 
-    if ($dosen->count() == 0) {
-        $responseJson["error"] = true;
-        $responseJson["message"] = "Nama dosen belum tersedia di database";
-        $responseJson["nama"] = null;
-        $responseJson["matkul"] = null;
-        $responseJson["no_hp"] = null;
-    } else {
-        $responseJson["error"] = false;
-        $responseJson["message"] = "Berhasil mengambil data";
-        $responseJson["nama"] = $dosendetail['nama'];
-        $responseJson["matkul"] = $dosendetail['matkul'];
-        $responseJson["no_hp"] = $dosendetail['no_hp'];
-    }
 
-    echo json_encode($responseJson); 
-});
-
-$app ->get('/matkul', function() use($app, $db){
-    if ($db->tbl_matkul()->count() == 0) {
-        $responseJson["error"] = true;
-        $responseJson["message"] = "Belum mengambil mata kuliah";
-    } else {
-        $responseJson["error"] = false;
-        $responseJson["message"] = "Berhasil mendapatkan data mata kuliah";
-        foreach($db->tbl_matkul() as $data){
-        $responseJson['semuamatkul'][] = array(
-            'id' => $data['id'],
-            'nama_dosen' => $data['nama_dosen'],
-            'matkul' => $data['matkul']
-            );
-        }
-    }
-    echo json_encode($responseJson);
-});
-
-$app->post('/matkul', function($request, $response, $args) use($app, $db){
-    $matkul = $request->getParams();
-    $result = $db->tbl_matkul->insert($matkul);
-
-    $responseJson["error"] = false;
-    $responseJson["message"] = "Berhasil menambahkan ke database";
-    echo json_encode($responseJson);
-});
-
-$app->delete('/matkul/{id}', function($request, $response, $args) use($app, $db){
-    $matkul = $db->tbl_matkul()->where('id', $args);
-    if($matkul->fetch()){
-        $result = $matkul->delete();
-        echo json_encode(array(
-            "error" => false,
-            "message" => "Matkul berhasil dihapus"));
-    }
-    else{
-        echo json_encode(array(
-            "error" => true,
-            "message" => "Matkul ID tersebut tidak ada"));
-    }
-});
 
 //run App
 $app->run();

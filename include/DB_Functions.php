@@ -78,7 +78,7 @@ class DB_Functions {
  
         // cek jika sudah sukses
         if ($result) {
-            $stmt = $this->conn->prepare("SELECT * FROM pesanan  WHERE uuid = ?");
+            $stmt = $this->conn->prepare("SELECT * FROM pesanan  WHERE uuid = ? ");
             $stmt->bind_param("s", $uuid);
             $stmt->execute();
             $pesanan = $stmt->get_result()->fetch_assoc();
@@ -88,6 +88,35 @@ class DB_Functions {
         } else {
             return false;
         }
+    }
+    public function getpesanan($idp) {
+            $stmt = $this->conn->prepare("SELECT * FROM pesanan  WHERE uuid = ?");
+            $stmt->bind_param("s", $idp);
+            $stmt->execute();
+            $pesanan = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+ 
+            return $pesanan;
+    }
+    function posStatus($idp, $e_status){
+        $stmt = $this->conn->prepare("UPDATE  pesanan SET status = ? WHERE uuid = ?");
+
+        $stmt->bind_param("ss",$e_status, $idp);
+        $result = $stmt->execute();
+        $stmt->close();
+
+        if($result){
+            $stmt = $this->conn->prepare("SELECT * FROM pesanan  WHERE uuid = ?");
+            $stmt->bind_param("s", $idp);
+            $stmt->execute();
+            $pesanan = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+ 
+            return $pesanan;
+        }else{
+            return false;
+        }
+
     }
     public function getKonsumen($id) {
             $stmt = $this->conn->prepare("SELECT * FROM user  WHERE uuid = ?");

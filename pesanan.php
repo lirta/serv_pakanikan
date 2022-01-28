@@ -40,6 +40,8 @@ if (
             $response["pesanan"]["total"] = $pesanan["total"];
             $response["pesanan"]["tgl_pemesanan"] = $pesanan["tgl_pemesanan"];
             $response["pesanan"]["status"] = $pesanan["status"];
+            // $response["pesanan"]["gambar"] = $pesanan["gambar"];
+            // $response["pesanan"]["tgl_bayar"] = $pesanan["tgl_bayar"];
             echo json_encode($response);
         }else{
             // gagal menyimpan data

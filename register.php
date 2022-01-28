@@ -18,7 +18,7 @@ if (
     $alamat = $_POST['alamat'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $rules = "konsumen";
+    $rules = "1";
     $gambar = "defult.jpg";
     // Cek jika user ada dengan email dan username yang sama
     if ($db->isUserExisted($email)) {
@@ -50,7 +50,8 @@ if (
 } else {
     $response["error"] = TRUE;
     $response["error_msg"] = "Parameter (name, email, username, atau password) ada yang kurang";
-    $response["data"]=$_POST['name'];
+    // $response["data"]=$_POST['name'];
     echo json_encode($response);
 }
+// echo('error');
 ?>
