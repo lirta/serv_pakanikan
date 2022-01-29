@@ -22,7 +22,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         $response["user"]["nama"] = $userm["nama"];
         $response["user"]["hp"] = $userm["hp"];
         $response["user"]["alamat"] = $userm["alamat"];
-        $response["user"]["alamat"] = $userm["email"];
         $response["user"]["gambar"] = $userm["gambar"];
         $response["user"]["rules"] = $userm["rules"];
         echo json_encode($response);
